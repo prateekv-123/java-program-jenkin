@@ -2,7 +2,7 @@ public class main {
     
 public static void main(String[] args) {
     
-String name = "PrateekVarshney";
+String name = "My Name is Prateek Varshney";
 int leng = name.length();
 String rev = "";
 for(int i = leng - 1; i >=0; i--){
