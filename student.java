@@ -6,7 +6,7 @@ public class student {
         int n = 5;
         int f = 1;
 
-        for(int i = 0; i <= n; i++){
+        for(int i = 1; i <= n; i++){
             f = f * i;
         }
         System.out.println("The Factorial of the " + n + " is: " + f);
