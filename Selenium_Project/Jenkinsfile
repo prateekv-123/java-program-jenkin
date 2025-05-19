@@ -11,20 +11,20 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'mvn clean install'
+                bat 'mvn clean install'
             }
         }
 
         stage('Test') {
             steps {
-                sh 'mvn test'
+                bat 'mvn test'
             }
         }
 
         stage('Deploy') {
             steps {
                 echo 'Deploy step - add your deployment commands here'
-                // For example: sh './deploy.sh'
+                // For example: bat './deploy.bat'
             }
         }
     }
