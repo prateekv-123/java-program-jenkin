@@ -15,14 +15,18 @@ pipeline {
 
         stage('Build') {
             steps {
-                bat 'mvn clean install'
+               dir('Selenium_Project')  {
+               bat 'mvn clean install'
             }
+        }
         }
 
         stage('Test') {
             steps {
-                bat 'mvn test'
+               dir('Selenium_Project'){
+               bat 'mvn test'
             }
+        }
         }
 
         stage('Deploy') {
