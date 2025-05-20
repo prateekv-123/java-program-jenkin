@@ -12,6 +12,11 @@ pipeline {
                 echo 'Checking out the code...'
             }
         }
+        stage('List Project Files') {
+    steps {
+        bat 'dir /s'
+    }
+}
 
         stage('Build') {
             steps {
