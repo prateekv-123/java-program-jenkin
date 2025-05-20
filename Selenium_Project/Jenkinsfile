@@ -47,6 +47,8 @@ pipeline {
                 reportFiles: 'index.html',
                 reportName: 'TestNG HTML Report'
             ])
+             echo 'Publishing JUnit-compatible TestNG results...'
+            junit 'Selenium_Project/test-output/testng-results.xml'
         }
     }
 }
