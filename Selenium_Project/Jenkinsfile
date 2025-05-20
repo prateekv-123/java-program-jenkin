@@ -2,38 +2,50 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven_3.9.9'  // Use the exact name you gave Maven in Jenkins Global Tool Configuration
+        maven 'Maven_3.9.9'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // This is skipped if using "Pipeline from SCM"
                 echo 'Checking out the code...'
             }
         }
 
         stage('Build') {
             steps {
-               dir('Selenium_Project')  {
-               bat 'mvn clean install'
+                dir('Selenium_Project') {
+                    bat 'mvn clean install'
+                }
             }
-        }
         }
 
         stage('Test') {
             steps {
-               dir('Selenium_Project'){
-               bat 'mvn test'
+                dir('Selenium_Project') {
+                    bat 'mvn test'
+                }
             }
-        }
         }
 
         stage('Deploy') {
             steps {
                 echo 'Deploy step - add your deployment commands here'
-                // For example: bat './deploy.bat'
             }
+        }
+    }
+
+    post {
+        always {
+            echo 'Publishing TestNG HTML report...'
+            publishHTML([
+                allowMissing: true,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'Selenium_Project/test-output', // adjust path if needed
+                reportFiles: 'index.html',
+                reportName: 'TestNG HTML Report'
+            ])
         }
     }
 }
