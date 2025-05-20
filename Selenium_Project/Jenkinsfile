@@ -28,6 +28,13 @@ pipeline {
                 }
             }
         }
+        stage('Check test-output') {
+    steps {
+        dir('Selenium_Project') {
+            bat 'dir test-output /s'
+        }
+    }
+}
 
         stage('Deploy') {
             steps {
