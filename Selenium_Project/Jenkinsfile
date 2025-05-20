@@ -1,4 +1,4 @@
-//report generating
+
 pipeline {
     agent any
 
