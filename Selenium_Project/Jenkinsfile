@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -12,11 +11,6 @@ pipeline {
                 echo 'Checking out the code...'
             }
         }
-        stage('List Project Files') {
-    steps {
-        bat 'dir /s'
-    }
-}
 
         stage('Build') {
             steps {
@@ -33,34 +27,11 @@ pipeline {
                 }
             }
         }
-        stage('Check test-output') {
-    steps {
-        dir('Selenium_Project') {
-            bat 'dir test-output /s'
-        }
-    }
-}
 
         stage('Deploy') {
             steps {
                 echo 'Deploy step - add your deployment commands here'
             }
-        }
-    }
-
-    post {
-        always {
-            echo 'Publishing TestNG HTML report...'
-            publishHTML([
-                allowMissing: true,
-                alwaysLinkToLastBuild: true,
-                keepAll: true,
-                reportDir: 'Selenium_Project/test-output', // adjust path if needed
-                reportFiles: 'index.html',
-                reportName: 'TestNG HTML Report'
-            ])
-             echo 'Publishing JUnit-compatible TestNG results...'
-            junit 'Selenium_Project/test-output/testng-results.xml'
         }
     }
 }
