@@ -1,0 +1,70 @@
+pipeline {
+    agent any
+
+    environment {
+        MAVEN_HOME = tool 'Maven' // Make sure Maven is installed and configured in Jenkins
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                dir('PrateekProject') {
+                    checkout scm
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('PrateekProject') {
+                    bat "${MAVEN_HOME}/bin/mvn clean compile"
+                }
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                dir('PrateekProject') {
+                    bat "${MAVEN_HOME}/bin/mvn test"
+                }
+            }
+        }
+
+        stage('Generate Report') {
+            steps {
+                dir('PrateekProject') {
+                    // Surefire plugin will auto-generate TestNG HTML reports in target/surefire-reports
+                    echo "Test reports generated under target/surefire-reports"
+                }
+            }
+            post {
+                always {
+                    dir('PrateekProject') {
+                        publishHTML([ 
+                            reportDir: 'target/surefire-reports', 
+                            reportFiles: 'emailable-report.html', 
+                            reportName: 'TestNG HTML Report', 
+                            keepAll: true, 
+                            alwaysLinkToLastBuild: true, 
+                            allowMissing: false
+                        ])
+                    }
+                }
+            }
+        }
+
+    }
+
+    post {
+        always {
+            echo "Pipeline completed"
+        }
+        success {
+            echo "Build and tests succeeded!"
+        }
+        failure {
+            echo "Build or tests failed!"
+        }
+    }
+}
