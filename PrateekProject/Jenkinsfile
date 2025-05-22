@@ -2,7 +2,8 @@ pipeline {
     agent any
 
     environment {
-        MAVEN_HOME = tool 'Maven'
+        MAVEN_HOME = 'C:\\Tools\\apache-maven-3.9.9'
+        PATH = "${env.MAVEN_HOME}\\bin;${env.PATH}"
     }
 
     stages {
@@ -18,15 +19,23 @@ pipeline {
         stage('Build') {
             steps {
                 dir('PrateekProject') {
-                    bat "${MAVEN_HOME}/bin/mvn clean compile"
+                    bat 'mvn clean compile'
                 }
             }
         }
 
-        stage('Run Tests') {
+        stage('Test') {
             steps {
                 dir('PrateekProject') {
-                    bat "${MAVEN_HOME}/bin/mvn test"
+                    bat 'mvn test'
+                }
+            }
+        }
+
+        stage('Generate Report') {
+            steps {
+                dir('PrateekProject') {
+                    echo "Test report generated at target/surefire-reports"
                 }
             }
         }
@@ -34,14 +43,12 @@ pipeline {
         stage('Publish Report') {
             steps {
                 dir('PrateekProject') {
-                    echo "Publishing TestNG HTML Report"
                     publishHTML([
                         reportDir: 'target/surefire-reports',
                         reportFiles: 'emailable-report.html',
-                        reportName: 'TestNG HTML Report',
+                        reportName: 'TestNG Report',
                         keepAll: true,
-                        alwaysLinkToLastBuild: true,
-                        allowMissing: false
+                        alwaysLinkToLastBuild: true
                     ])
                 }
             }
@@ -53,10 +60,10 @@ pipeline {
             echo "Pipeline completed"
         }
         success {
-            echo "Build and tests succeeded!"
+            echo "🎉 Build and Tests Succeeded!"
         }
         failure {
-            echo "Build or tests failed!"
+            echo "❌ Build or Tests Failed"
         }
     }
 }
