@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        MAVEN_HOME = tool 'Maven' // Make sure Maven is installed and configured in Jenkins
+        MAVEN_HOME = tool 'Maven'
     }
 
     stages {
@@ -31,29 +31,21 @@ pipeline {
             }
         }
 
-        stage('Generate Report') {
+        stage('Publish Report') {
             steps {
                 dir('PrateekProject') {
-                    // Surefire plugin will auto-generate TestNG HTML reports in target/surefire-reports
-                    echo "Test reports generated under target/surefire-reports"
-                }
-            }
-            post {
-                always {
-                    dir('PrateekProject') {
-                        publishHTML([ 
-                            reportDir: 'target/surefire-reports', 
-                            reportFiles: 'emailable-report.html', 
-                            reportName: 'TestNG HTML Report', 
-                            keepAll: true, 
-                            alwaysLinkToLastBuild: true, 
-                            allowMissing: false
-                        ])
-                    }
+                    echo "Publishing TestNG HTML Report"
+                    publishHTML([
+                        reportDir: 'target/surefire-reports',
+                        reportFiles: 'emailable-report.html',
+                        reportName: 'TestNG HTML Report',
+                        keepAll: true,
+                        alwaysLinkToLastBuild: true,
+                        allowMissing: false
+                    ])
                 }
             }
         }
-
     }
 
     post {
