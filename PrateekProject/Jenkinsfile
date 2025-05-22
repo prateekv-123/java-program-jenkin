@@ -10,37 +10,47 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                checkout scm
+                dir('PrateekProject') {
+                    checkout scm
+                }
             }
         }
 
         stage('Build') {
             steps {
-                bat 'mvn clean compile'
+                dir('PrateekProject') {
+                    bat 'mvn clean compile'
+                }
             }
         }
 
         stage('Test') {
             steps {
-                bat 'mvn test'
+                dir('PrateekProject') {
+                    bat 'mvn test'
+                }
             }
         }
 
         stage('Generate Report') {
             steps {
-                echo "Test report generated at target/surefire-reports"
+                dir('PrateekProject') {
+                    echo "Test report generated at target/surefire-reports"
+                }
             }
         }
 
         stage('Publish Report') {
             steps {
-                publishHTML([
-                    reportDir: 'target/surefire-reports',
-                    reportFiles: 'emailable-report.html',
-                    reportName: 'TestNG Report',
-                    keepAll: true,
-                    alwaysLinkToLastBuild: true
-                ])
+                dir('PrateekProject') {
+                    publishHTML([
+                        reportDir: 'target/surefire-reports',
+                        reportFiles: 'emailable-report.html',
+                        reportName: 'TestNG Report',
+                        keepAll: true,
+                        alwaysLinkToLastBuild: true
+                    ])
+                }
             }
         }
     }
